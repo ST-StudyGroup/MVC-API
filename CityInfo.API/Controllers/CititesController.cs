@@ -11,13 +11,28 @@ namespace CityInfo.API.Controllers
     public class CititesController : Controller
     {
         [HttpGet()]
-        public JsonResult GetCities()
+        public IActionResult GetCities()
         {
-            return new JsonResult(new List<object>()
+            //            Less favorable way of implementing a status code, depends on returning a JsonResult
+            //            var temp =  new JsonResult(CitiesDataStore.Current.Cities);
+            //            temp.StatusCode == 200;
+            //            return temp;
+
+
+            // Not 404 is required because an empty list is a valid response
+            return Ok(CitiesDataStore.Current.Cities);
+        }
+
+        [HttpGet("{id}")] // equivalent to [HttpGet("api/cities/{id}")] due to Controller level Route
+        public IActionResult GetCity(int id)
+        {
+            var cityToReturn = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == id);
+            if (cityToReturn == null)
             {
-                new { id = 1, name = "New York City"},
-                new { id = 2, name = "Antwerp"}
-            });
+                return NotFound(); // If exceptions other than "NotFound" occur, the Framework results a 500 Internal Server Error
+            }
+
+            return Ok(cityToReturn);
         }
     }
 }

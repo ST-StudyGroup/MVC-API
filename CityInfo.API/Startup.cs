@@ -33,6 +33,7 @@ namespace CityInfo.API
                 app.UseExceptionHandler();
             }
 
+            app.UseStatusCodePages(); // Handler for common status codes
             app.UseMvc();
 
 //            app.Run((Context) => { throw new Exception("Example exception"); });
